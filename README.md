@@ -1,4 +1,5 @@
-Simple ColorPicker App
+Simple ColorPicker App. 
+
 App uses Kotlin and Compose.
 
 Using Compose
