@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.sourceInformationMarkerStart
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -62,6 +63,32 @@ fun ColorPickScreen(
             fontStyle = FontStyle.Italic
         )
         Spacer(modifier = Modifier.height(8.dp))
-        ColorSlider()
+        ColorSlider(
+            label = "RED",
+            value = red.intValue,
+            onChanged = {
+                red.intValue = it
+                viewModel.setRed(it)
+            },
+            color = Color.Red
+        )
+        ColorSlider(
+            label = "GREEN",
+            value = green.intValue,
+            onChanged = {
+                green.intValue = it
+                viewModel.setGreen(it)
+            },
+            color = Color.Green
+        )
+        ColorSlider(
+            label = "BLUE",
+            value = blue.intValue,
+            onChanged = {
+                blue.intValue = it
+                viewModel.setBlue(it)
+            },
+            color = Color.Blue
+        )
     }
 }
