@@ -4,7 +4,7 @@ App uses Kotlin and Compose.
 Using Compose
 Please build a simple color picker in 30 minutes:
 
-Create a single-screen Android app with three sliders (SeekBars) for RGB values
+Create a single-screen Android app with three sliders (SeekBars) for RGB values./n
 Each slider should range from 0-255, representing the R, G, and B color values
 Include labels for each slider indicating the current numeric value (0-255)
 Display a preview rectangle/square that shows the currently selected color
