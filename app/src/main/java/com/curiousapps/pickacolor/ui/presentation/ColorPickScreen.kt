@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -105,5 +108,19 @@ fun ColorPickScreen(
             fontSize = 20.sp,
             textAlign = TextAlign.Center
         )
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(
+                    red = red.intValue,
+                    green = green.intValue,
+                    blue = blue.intValue
+                )),
+            onClick = {clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(hexcode))},
+            shape = RoundedCornerShape(6.dp)
+        ){
+            Text(
+                text = "Copy to clipboard"
+            )
+        }
     }
 }
