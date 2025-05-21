@@ -16,8 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,18 +26,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.curiousapps.pickacolor.ui.theme.PickAColorTheme
 
 @Composable
-fun ColorPickScreen(
-    viewModel: ColorPickViewModel = ColorPickViewModel()
-){
-    val state by viewModel.state.collectAsState(ColorPickViewModel.ColorState())
+fun ColorPickScreen(){
 
-    val red = rememberSaveable{ mutableIntStateOf(state.red)}
-    val green = rememberSaveable{ mutableIntStateOf(state.green)}
-    val blue = rememberSaveable{ mutableIntStateOf(state.blue)}
+    val red = rememberSaveable{ mutableIntStateOf(128)}
+    val green = rememberSaveable{ mutableIntStateOf(128)}
+    val blue = rememberSaveable{ mutableIntStateOf(128)}
+    val color = remember {
+        derivedStateOf {
+            Color(red.intValue, green.intValue, blue.intValue)
+        }
+    }
+    val contentColor = remember(color.value) {
+        // Use the W3C algorithm for calculating contrast (thanks Claude.ai)
+        val luminance = 0.299f * color.value.red +
+                0.587f * color.value.green +
+                0.114f * color.value.blue
+
+        if (luminance < 0.5f) Color.White else Color.Black
+    }
 
     val hexcode = remember(red.intValue, green.intValue, blue.intValue){
         String.format("#%02X%02X%02X", red.intValue, green.intValue, blue.intValue)
@@ -71,7 +82,6 @@ fun ColorPickScreen(
             value = red.intValue,
             onChanged = {
                 red.intValue = it
-                viewModel.setRed(it)
             },
             color = Color.Red
         )
@@ -80,7 +90,6 @@ fun ColorPickScreen(
             value = green.intValue,
             onChanged = {
                 green.intValue = it
-                viewModel.setGreen(it)
             },
             color = Color.Green
         )
@@ -89,7 +98,6 @@ fun ColorPickScreen(
             value = blue.intValue,
             onChanged = {
                 blue.intValue = it
-                viewModel.setBlue(it)
             },
             color = Color.Blue
         )
@@ -97,11 +105,7 @@ fun ColorPickScreen(
         Box(
             modifier = Modifier
                 .size(150.dp)
-                .background(Color(
-                    red = red.intValue,
-                    green =  green.intValue,
-                    blue = blue.intValue
-                ))
+                .background(color = color.value)
         )
         Text(
             text = hexcode,
@@ -110,11 +114,9 @@ fun ColorPickScreen(
         )
         Button(
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(
-                    red = red.intValue,
-                    green = green.intValue,
-                    blue = blue.intValue
-                )),
+                containerColor = color.value,
+                contentColor = contentColor
+            ),
             onClick = {clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(hexcode))},
             shape = RoundedCornerShape(6.dp)
         ){
@@ -122,5 +124,13 @@ fun ColorPickScreen(
                 text = "Copy to clipboard"
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ColorPickScreenPreview() {
+    PickAColorTheme {
+        ColorPickScreen()
     }
 }
