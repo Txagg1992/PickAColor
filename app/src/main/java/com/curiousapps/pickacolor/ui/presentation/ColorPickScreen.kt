@@ -37,9 +37,15 @@ fun ColorPickScreen(){
     val red = rememberSaveable{ mutableIntStateOf(128)}
     val green = rememberSaveable{ mutableIntStateOf(128)}
     val blue = rememberSaveable{ mutableIntStateOf(128)}
+    val alpha = rememberSaveable{ mutableIntStateOf(255)}
     val color = remember {
         derivedStateOf {
-            Color(red.intValue, green.intValue, blue.intValue)
+            Color(
+                red = red.intValue,
+                green = green.intValue,
+                blue = blue.intValue,
+                alpha = alpha.intValue
+            )
         }
     }
     val contentColor = remember(color.value) {
@@ -52,7 +58,7 @@ fun ColorPickScreen(){
     }
 
     val hexcode = remember(red.intValue, green.intValue, blue.intValue){
-        String.format("#%02X%02X%02X", red.intValue, green.intValue, blue.intValue)
+        String.format("0x%02X%02X%02X%02X", alpha.intValue, red.intValue, green.intValue, blue.intValue)
     }
 
     val scrollState = rememberScrollState()
@@ -100,6 +106,12 @@ fun ColorPickScreen(){
                 blue.intValue = it
             },
             color = Color.Blue
+        )
+        ColorSlider(
+            label = "ALPHA",
+            value = alpha.intValue,
+            onChanged = { alpha.intValue = it },
+            color = Color.White
         )
 
         Box(
